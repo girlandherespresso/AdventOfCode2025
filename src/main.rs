@@ -1,3 +1,8 @@
+
+mod day1;
+
 fn main() {
-    println!("Hello, world!");
+    println!("Welcome to Advent of Code!");
+
+    day1::solve();
 }
