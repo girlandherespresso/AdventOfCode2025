@@ -1,24 +1,38 @@
 const DIAL_SIZE: i32 = 100;
 
-pub fn solve() {
-    println!("Solving day 1...");
+pub fn solve(input: &str) -> u32 {
+    let dial_position: i32 = 50;
 
-    let mut dial_position: i32 = 50;
-
-    let rotations = vec![50,-10,20,99,-10,1];
-
+    let rotations = parse_input(input);
     let dial_positions = calc_dial_positions(dial_position, rotations);
-
-    let dial_iter = dial_positions.iter();
-
-    for dial_pos in dial_iter {
-        println!("Dial Position: {dial_pos}");
-    }
-
     let total_zeros = calc_total_zeros(dial_positions);
 
-    println!("Total zeros: {total_zeros}");
+    total_zeros
+}
 
+fn parse_input(input: &str) -> Vec<i32> {
+    let lines = input.trim().lines();
+    let mut rotations: Vec<i32> = Vec::new();
+    
+    for line in lines {
+        let rotation_dir;
+        if line.starts_with("R") {
+            rotation_dir = 1;
+        } else if line.starts_with("L") {
+            rotation_dir = -1;
+        } else {
+            panic!("Invalid rotation!");
+        }
+
+        let rotation_amount: i32 = line[1..]
+            .parse()
+            .expect("Failed to parse string to integer");
+
+        let rotation: i32 = rotation_dir * rotation_amount;
+        rotations.push(rotation);
+    }
+
+    rotations
 }
 
 fn calc_total_zeros(positions: Vec<i32>) -> u32 {
