@@ -1,13 +1,10 @@
 const DIAL_SIZE: i32 = 100;
 
-pub fn solve(input: &str) -> u32 {
+pub fn solve(input: &str, part: u8) -> u32 {
     let dial_position: i32 = 50;
-
     let rotations = parse_input(input);
-    let dial_positions = calc_dial_positions(dial_position, rotations);
-    let total_zeros = calc_total_zeros(dial_positions);
-
-    total_zeros
+    
+    calc_zeros(dial_position, &rotations, part)
 }
 
 fn parse_input(input: &str) -> Vec<i32> {
@@ -16,14 +13,16 @@ fn parse_input(input: &str) -> Vec<i32> {
     
     for line in lines {
         let rotation_dir;
+
         if line.starts_with("R") {
             rotation_dir = 1;
         } else if line.starts_with("L") {
             rotation_dir = -1;
         } else {
-            panic!("Invalid rotation!");
+            panic!("Invalid rotation direction!");
         }
-
+        
+        // Okay to use .expect() here because program should crash if parsing fails (invalid input)
         let rotation_amount: i32 = line[1..]
             .parse()
             .expect("Failed to parse string to integer");
@@ -35,33 +34,37 @@ fn parse_input(input: &str) -> Vec<i32> {
     rotations
 }
 
-fn calc_total_zeros(positions: Vec<i32>) -> u32 {
-    let pos_iter = positions.iter();
-    let mut zero_count: u32 = 0;
-    
-    for pos in pos_iter {
-        if *pos == 0 {
-            zero_count += 1;
-        }
-    }
 
-    zero_count
-}
-
-fn calc_dial_positions(dial_pos: i32, rotations: Vec<i32>) -> Vec<i32> {
-    let rot_iter = rotations.iter();
+fn calc_zeros(dial_pos: i32, rotations: &Vec<i32>, part: u8) -> u32 {
     let mut cur_dial_pos = dial_pos;
-    
-    let mut positions = Vec::new();
+    let mut zeros_passed: u32 = 0;
 
-    for rot in rot_iter {
-        cur_dial_pos = rotate_dial(cur_dial_pos, *rot);
-        positions.push(cur_dial_pos);
+    for rotation in rotations.iter() {
+        let mut next_dial_pos = cur_dial_pos + rotation;
+        if part == 1 {
+            next_dial_pos = next_dial_pos.rem_euclid(DIAL_SIZE);
+        }
+       
+        match next_dial_pos {
+            0 => {
+                zeros_passed += 1;
+            },
+            1..DIAL_SIZE => {}, // Going from 1-99 -> 1-99 never passes 0
+            num if num >= DIAL_SIZE => { // When part==1, num < 100 so match never occurs
+                zeros_passed += (num / DIAL_SIZE) as u32;
+            },
+            _ => { // when part==1, next_dial_pos >= 0 so match never occurs
+                if cur_dial_pos != 0 {
+                    zeros_passed += 1;
+                }
+                zeros_passed += (next_dial_pos / DIAL_SIZE).abs() as u32;
+            }
+        }
+        next_dial_pos = next_dial_pos.rem_euclid(DIAL_SIZE);
+
+        cur_dial_pos = next_dial_pos;
     }
 
-    positions
+    zeros_passed
 }
 
-fn rotate_dial(dial_pos: i32, rotation: i32) -> i32 {
-    (dial_pos + rotation).rem_euclid(DIAL_SIZE)
-}

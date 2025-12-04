@@ -6,7 +6,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Welcome to Advent of Code!");
 
     let day1_input_file = "src/inputs/day1.txt";
-    println!("Solution to day 1:\n{}", day1::solve(&read_file(day1_input_file)));
+    println!("--- Solution to Day 1 ---\nPart 1:\n{}\n Part 2:\n{}", 
+        day1::solve(&read_file(day1_input_file), 1),
+        day1::solve(&read_file(day1_input_file), 2));
 
     Ok(())
 }
