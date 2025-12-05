@@ -15,8 +15,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     /* Day 2 */
     let day2_input_file = "src/inputs/day2.txt";
-    println!("--- Solution to Day 2 ---\n{}",
-        day2::solve(&read_file(day2_input_file), 1));
+    println!("--- Solution to Day 2 ---\nPart 1:\n{}\n Part 2:\n{}",
+        day2::solve(&read_file(day2_input_file), 1),
+        day2::solve(&read_file(day2_input_file), 2));
 
 
 
