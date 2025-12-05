@@ -44,35 +44,32 @@ fn get_invalid_id(id: u64, part: u8) -> Option<u64> {
         }
     }
     
-    //print!("{id}");
-
     // Check through patterns, eliminating failed patterns
     for (pattern, pattern_len) in &patterns {
         // Now check through the string each 'pattern_len' characters for equality to pattern
         let mut valid: bool = true;
         for index in 0..(id_string.len() / pattern_len) {
+            // Only check past 2 patterns if on part 2
+            // This is not efficient for part 1, but is a multi-part solution
             if (part == 1) && index >= 2 {
                 valid = false;
                 break;
             }
             let start = index * pattern_len;
             let end = (index + 1) * pattern_len;
-            let cur_slice = &id_string[start..(cmp::min(end, id_string.len()))]; // May fail out of range? 
-            //println!("{pattern}");
+            let cur_slice = &id_string[start..(cmp::min(end, id_string.len()))];
+            
             if cur_slice != *pattern {
                 valid = false;
                 break;
             }
-            //println!("Start: {start} | End: {end} | Current pattern: {cur_slice} | Len: {} | Valid: {valid}", patterns.get(pattern).unwrap());
         }
+
         if valid {
-            //println!(" valid: {valid}");
             return Some(id);
         }
     }
     
-    //println!(" valid: false");
-
     None
 }
 
