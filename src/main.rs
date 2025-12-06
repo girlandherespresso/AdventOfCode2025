@@ -1,7 +1,8 @@
 use std::fs;
 
 //mod day1;
-mod day2;
+//mod day2;
+mod day3;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Welcome to Advent of Code!");
@@ -13,12 +14,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         day1::solve(&read_file(day1_input_file), 2));
     */
 
-    /* Day 2 */
+    /* Day 2 
     let day2_input_file = "src/inputs/day2.txt";
     println!("--- Solution to Day 2 ---\nPart 1:\n{}\n Part 2:\n{}",
         day2::solve(&read_file(day2_input_file), 1),
         day2::solve(&read_file(day2_input_file), 2));
+    */
 
+    /* Day 3 */
+    let day3_input_file = "src/inputs/day3.txt"; 
+    println!("{}",day3::solve(&read_file(day3_input_file), 1));
+    /*println!("--- Solution to Day 3 ---\nPart 1:\n{}\n Part 2:\n{}",
+        day3::solve(&read_file(day3_input_file), 1),
+        day3::solve(&read_file(day3_input_file), 2));*/
 
 
     Ok(())
