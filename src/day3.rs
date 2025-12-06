@@ -18,36 +18,19 @@ pub fn solve(input: &str, part: u8) -> usize {
     joltage_total
 }
 
-/* Brainstorming solution to part 1:
- * def last digit as nth digit
- * Step 1:
- *      Find largest digit in 1st through (n-1)th as first digit in final
- * Step 2:
- *      Search from index of largest digit to nth digit for largest remaining digit
- * Combine digits into final joltage
- */
-
 fn find_largest_joltage(bank: &str, battery_count: usize) -> usize {
     let starting_end_index = bank.len() - battery_count;
     let mut start_index = 0;
     let mut max_digits: Vec<usize> = Vec::new();
-    //println!("Bank: {bank}");
     
     // Iterate through each range to find the largest possible joltage in the bank slice
     for end_index in starting_end_index..(bank.len()) {
         let next_max_digit = find_largest_digit(bank, start_index, end_index);
         max_digits.push(next_max_digit.max_digit);
-        //println!("Range: {start_index} - {end_index}");
         start_index = next_max_digit.index + 1;
     }
 
     // Add up the digits to create the final joltage
-
-   // for digit in max_digits.iter() {
-   //     print!("{digit}");
-   // }
-   // println!("");
-
     let mut digit_mult_factor = 1;
     let mut joltage = 0;
     for digit in max_digits.iter().rev() {
@@ -55,13 +38,6 @@ fn find_largest_joltage(bank: &str, battery_count: usize) -> usize {
         digit_mult_factor *= 10;
     }
 
-
-   // let first_max_digit = find_largest_digit(bank, 0, bank.len() - 1);
-   // let starting_index = first_max_digit.index + 1;
-   // let second_max_digit = find_largest_digit(bank, starting_index, bank.len()).max_digit;
-
-   // let total = (10 * first_max_digit.max_digit) + second_max_digit;
-    //println!("{total}");
     joltage
 }
 
@@ -89,7 +65,6 @@ fn parse_input(input: &str) -> Vec<String> {
     
     for line in input.lines() {
         banks.push(String::from(line));
-        //println!("{}",banks.last().unwrap());
     }
 
     banks
