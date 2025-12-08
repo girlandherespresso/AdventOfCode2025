@@ -39,29 +39,38 @@ fn remove_accessible_rolls(grid: &mut Grid, surrounding_roll_limit: usize, max_i
         }
 
         last_removed_rolls = removed_rolls;
-        let mut index = 0;
         for space in grid.spaces.iter_mut() {
-            if index % grid.cols == 0 {
-                println!("");
-            }
-            let mark = match space {
+            match space {
                 GridSpace { has_roll: true, accessible: true } => {
                     removed_rolls += 1;
                     space.has_roll = false;
-                    //println!("roll removed");
-                    'x'
-                },
-                GridSpace { has_roll: true, accessible: false } => '@',
-                GridSpace { has_roll: false, .. } => '.',
-            };
-            print!("{mark}");
-            index += 1;
+                }
+                _ => {},
+            }
         }
-        println!("\n{removed_rolls}");
+        //print_grid(grid, removed_rolls);
         iteration += 1;
     }
 
     removed_rolls
+}
+
+fn print_grid(grid: &mut Grid, removed_rolls: usize) {
+    let mut index = 0;
+    for space in grid.spaces.iter_mut() {
+        if index % grid.cols == 0 {
+            println!("");
+        }
+        let mark = match space {
+            GridSpace { has_roll: true, accessible: true } => 'x',
+            GridSpace { has_roll: true, accessible: false } => '@',
+            GridSpace { has_roll: false, .. } => '.',
+        };
+        print!("{mark}");
+        index += 1;
+    }
+    println!("\n{removed_rolls}");
+
 }
 
 fn check_roll_accessible(grid: &mut Grid, column: usize, row: usize, surrounding_roll_limit: usize) -> bool {
@@ -87,19 +96,12 @@ fn check_roll_accessible(grid: &mut Grid, column: usize, row: usize, surrounding
         }
     }
 
-    //println!("Col: {column}, Row: {row}");
-
-    //println!("Num Spaces to Check: {}", spaces_to_check.len());
-
-    
     let mut adjacent_roll_count = 0;
     for space in spaces_to_check.iter() {
         if grid.get_space(space.0, space.1).has_roll {
             adjacent_roll_count += 1;
         }
     }
-
-    //println!("Adjacent Rolls: {adjacent_roll_count}");
 
     let accessible = adjacent_roll_count < surrounding_roll_limit;
     grid.get_space(column, row).accessible = accessible;
@@ -125,13 +127,11 @@ fn parse_input(input: &str) -> Grid {
             };
             let grid_space = GridSpace {
                 has_roll: has_roll,
-                accessible: true, // default to true and assign to false when checked
+                accessible: true,
             };
             spaces.push(grid_space);
-            print!("{c}");
         }
         rows += 1;
-        println!("");
     }
 
     Grid{
